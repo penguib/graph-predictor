@@ -35,6 +35,11 @@ type ClientResponse struct {
 	Graph *GPTResponse
 }
 
+type FeedResponse struct {
+	LikeAverage float32 `json:"like_average"`
+	Graphs      []Graph `json:"graphs"`
+}
+
 func GETGraphs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var graphs []Graph
@@ -47,12 +52,42 @@ func GETGraphs(w http.ResponseWriter, r *http.Request) {
 
 	defer cursor.Close(context.Background())
 
+	existsFilter := bson.M{
+		"rating": bson.M{
+			"$exists": true,
+		},
+	}
+
+	hasErr := false
+	existsCount, err := mclient.Graphs.CountDocuments(context.Background(), existsFilter)
+	if err != nil {
+		hasErr = true
+	}
+
+	valueFilter := bson.M{"rating": 1}
+	valueCount, err := mclient.Graphs.CountDocuments(context.Background(), valueFilter)
+	if err != nil {
+		hasErr = true
+	}
+
+	var avg float32
+	if existsCount <= 0 || hasErr {
+		avg = 0
+	} else {
+		avg = (float32(valueCount) / float32(existsCount)) * 100
+	}
+
 	if err = cursor.All(context.Background(), &graphs); err != nil {
 		WriteError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(graphs); err != nil {
+	res := &FeedResponse{
+		Graphs:      graphs,
+		LikeAverage: avg,
+	}
+
+	if err = json.NewEncoder(w).Encode(res); err != nil {
 		WriteError(w, "error writing bytes", http.StatusInternalServerError)
 		return
 	}
