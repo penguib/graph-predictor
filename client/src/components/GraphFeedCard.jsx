@@ -61,6 +61,7 @@ function GraphFeedCard(props) {
                     <div className="p-4">
                         <h3 className="text-lg font-semibold text-gray-800">Y-Axis: {props.description_y}</h3>
                         <p className="text-sm text-gray-600 mt-1">X-Axis: {props.description_x}</p>
+                        <p className="text-sm text-gray-600 mt-1">Name: {!props.name ? "Anonymous" : props.name}</p>
                         <p className="text-sm text-gray-600 mt-1">AI's Reasoning: <br /> {props.reasoning}</p>
                         {
                             props.rating &&

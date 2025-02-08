@@ -42,17 +42,20 @@ function PlotGraph({ points, newPoints }) {
 
                     // Move to the next point
                     currentIndex++;
-                    setTimeout(drawPoint, 5); // 50ms delay between points, adjust as needed
+                    setTimeout(drawPoint, 25); // 50ms delay between points, adjust as needed
+                }
+                else {
+                    // Start drawing green points after blue ones finish
+                    drawPoint2();
                 }
             };
 
 
-            drawPoint(); // Start drawing points
 
-            currentIndex = 0;
+            let currentIndex1 = 0;
             const drawPoint2 = () => {
-                if (currentIndex < newPoints.length) {
-                    const point = newPoints[currentIndex];
+                if (currentIndex1 < newPoints.length) {
+                    const point = newPoints[currentIndex1];
                     const x = (point.x / maxX) * (width - 2 * padding) + padding;
                     const y = height - (point.y / maxY) * (height - 2 * padding) - padding;
 
@@ -63,13 +66,12 @@ function PlotGraph({ points, newPoints }) {
                     ctx.fill();
 
                     // Move to the next point
-                    currentIndex++;
-                    setTimeout(drawPoint2, 5); // 50ms delay between points, adjust as needed
+                    currentIndex1++;
+                    setTimeout(drawPoint2, 25); // 50ms delay between points, adjust as needed
                 }
             };
 
-
-            drawPoint2(); // Start drawing points
+            drawPoint(); // Start drawing points
         }
     }, [points]);
 
