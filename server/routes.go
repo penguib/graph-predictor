@@ -16,6 +16,7 @@ type Graph struct {
 	DescriptionY    string             `json:"description_y" bson:"description_y"`
 	Points          [][]int64          `bson:"points"`
 	GeneratedPoints [][]int64          `json:"generated_points,omitempty" bson:"generated_points,omitempty"`
+	Reasoning       string             `json:"reasoning,omitempty" bson:"reasoning,omitempty"`
 	Rating          int                `json:"rating,omitempty" bson:"rating,omitempty"`
 	Image           string             `json:"image" bson:"image"`
 	Name            string             `json:"name,omitempty" bson:"name,omitempty"`
@@ -118,6 +119,8 @@ func POSTGraphs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	graph.GeneratedPoints = jsonRes.Points
+	graph.Reasoning = jsonRes.Reasoning
+
 	if graph.Name == "" {
 		graph.Name = "Anonymous"
 	}
