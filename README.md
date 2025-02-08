@@ -1,5 +1,7 @@
 # graph.pics
 
+https://graph.pics
+
 ## Purpose
 Traditional statistical predictions cannot the meanings axis labels
 
