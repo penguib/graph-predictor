@@ -18,6 +18,7 @@ type Graph struct {
 	GeneratedPoints [][]int64          `json:"generated_points,omitempty" bson:"generated_points,omitempty"`
 	Rating          int                `json:"rating,omitempty" bson:"rating,omitempty"`
 	Image           string             `json:"image" bson:"image"`
+	Name            string             `json:"name,omitempty" bson:"name,omitempty"`
 }
 
 type Rating struct {
@@ -117,6 +118,9 @@ func POSTGraphs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	graph.GeneratedPoints = jsonRes.Points
+	if graph.Name == "" {
+		graph.Name = "Anonymous"
+	}
 
 	_, err = mclient.Graphs.InsertOne(context.Background(), graph)
 	if err != nil {
